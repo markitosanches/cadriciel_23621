@@ -19,7 +19,7 @@
                 <div class="collapse navbar-collapse" id="navbarsExample03">
                     <ul class="navbar-nav me-auto mb-2 mb-sm-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Tasks</a>
+                            <a class="nav-link active" aria-current="page" href="{{route('task.index')}}">Tasks</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">User</a>
@@ -28,7 +28,7 @@
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
                                 aria-expanded="false">Tasks</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">New Task</a></li>
+                                <li><a class="dropdown-item" href="{{ route('task.create')}}">New Task</a></li>
                                 <li><a class="dropdown-item" href="#">Completed</a></li>
                                 <li><a class="dropdown-item" href="#">Unfinished</a></li>
                             </ul>
@@ -52,6 +52,13 @@
         </nav>
     </header>
     <div class="container flex-grow-1">
+    @if(session('success'))
+    <div class="mt-4 alert alert-success alert-dismissible fade show" role="alert">
+        <strong> {{ session('success')}} </strong> 
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+
         @yield('content')
     </div>
     <footer class="footer mt-auto py-3 bg-dark text-white">

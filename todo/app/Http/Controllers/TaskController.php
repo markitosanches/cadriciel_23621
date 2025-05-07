@@ -18,7 +18,7 @@ class TaskController extends Controller
         //$tasks = Task::orderby('title')->first();
         //return $tasks[2]['title'];
 
-       return $tasks;
+       return view('task.index', ['tasks' => $tasks]);
     }
 
     /**
@@ -26,7 +26,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        return view('task.create');
     }
 
     /**
@@ -34,7 +34,18 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // return $request;
+
+        $task=Task::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'completed' => $request->input('completed', false),
+            'due_date' => $request->due_date,
+            'user_id' => 1,
+        ]);
+
+     return redirect()->route('task.show', $task->id)->with('success', 'Task Created Successfully!');
+
     }
 
     /**
@@ -43,7 +54,7 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         // $task = select * from tasks where id = $task
-       return $task;
+       return  view('task.show', ['task' => $task]);
     }
 
     /**
