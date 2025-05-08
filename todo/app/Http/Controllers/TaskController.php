@@ -35,7 +35,14 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         // return $request;
-
+        $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required|min:10',
+            'completed' => 'nullable|boolean',
+            'due_date' => 'nullable|date',
+        ]);
+        // return redirect()->back()->withErrors([])->with('input')
+   
         $task=Task::create([
             'title' => $request->title,
             'description' => $request->description,
@@ -62,7 +69,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return view('task.edit', ['task'=>$task]);
     }
 
     /**
@@ -70,7 +77,21 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required|min:10',
+            'completed' => 'nullable|boolean',
+            'due_date' => 'nullable|date',
+        ]);
+
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'completed' => $request->input('completed', false),
+            'due_date' => $request->due_date,
+        ]);
+
+        return redirect()->route('task.show', $task->id)->with('success', 'Task Updated Successfully!');
     }
 
     /**
@@ -78,6 +99,9 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $title = $task->title;
+        $task->delete();
+
+        return redirect()->route('task.index')->with('success', 'Task: '.$title.' was deleted successfully!');
     }
 }
