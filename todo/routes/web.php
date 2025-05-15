@@ -31,3 +31,5 @@ Route::delete('/task/{task}', [TaskController::class, 'destroy'])->name('task.de
 Route::get('/query', [TaskController::class, 'query']);
 
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
+Route::get('/registration', [UserController::class, 'create'])->name('user.create');
+Route::post('/registration', [UserController::class, 'store'])->name('user.store');
