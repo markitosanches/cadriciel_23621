@@ -17,6 +17,7 @@
                         <li><strong>Author: </strong> {{ $task->user->name }}</li>
                     </ul>
                 </div>
+                @auth
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('task.edit', $task->id)}}" class="btn btn-sm btn-outline-success">Edit</a>
@@ -26,6 +27,7 @@
                         </button>
                     </div>
                 </div>
+                @endauth
             </div>
         </div>
     </div>

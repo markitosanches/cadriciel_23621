@@ -2,27 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-class UserController extends Controller
-{
 
-    public function __construct(){
-        $this->middleware('auth');
-    }
+class AuthController extends Controller
+{
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::select('id', 'name', 'email')->orderby('name')->paginate(4);
-
-
-        return view('user.index', ['users' => $users]);
+        //
     }
 
     /**
@@ -30,7 +22,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create');
+        return view('auth.create');
     }
 
     /**
@@ -39,23 +31,26 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:50',
-            'email' => 'required|email|max:100|unique:users',
+            'email' => 'required|email|max:100|exists:users',
             'password'=> 'min:6|max:20'
         ]);
-        $user = new User;
-        $user->fill($request->all());
-        $user->password = Hash::make($request->password);
-        $user->save();
-       
-        return redirect(route('user.index'))->withSuccess('Users Created successfully!');
 
+        $credentials = $request->only('email', 'password');
+        if(!Auth::validate($credentials)):
+            return redirect()->back()->withErrors(trans('auth.password'))->withInput();
+        endif;
+
+        $user = Auth::getProvider()->retrieveByCredentials($credentials);
+        Auth::login($user);
+
+        return redirect()->intended(route('task.index'))->withSuccess('Signed in');
     }
+
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(string $id)
     {
         //
     }
@@ -63,7 +58,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(string $id)
     {
         //
     }
@@ -71,7 +66,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -79,8 +74,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy()
     {
-        //
+        Auth::logout();
+        return redirect(route('login'));
     }
 }

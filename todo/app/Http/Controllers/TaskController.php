@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -14,12 +15,15 @@ class TaskController extends Controller
      */
     public function index()
     {
+        // if(Auth::check()){
         //select * from tasks;
         $tasks = Task::all();
         //$tasks = Task::orderby('title')->first();
         //return $tasks[2]['title'];
 
        return view('task.index', ['tasks' => $tasks]);
+    //    } 
+    //    return 'Bye';
     }
 
     /**
@@ -49,7 +53,7 @@ class TaskController extends Controller
             'description' => $request->description,
             'completed' => $request->input('completed', false),
             'due_date' => $request->due_date,
-            'user_id' => 1,
+            'user_id' => Auth::user()->id,
         ]);
 
      return redirect()->route('task.show', $task->id)->with('success', 'Task Created Successfully!');
