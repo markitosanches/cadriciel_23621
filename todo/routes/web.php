@@ -6,6 +6,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SetLocaleController;
+use App\Http\Controllers\CategoryController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,6 +34,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit/task/{task}', [TaskController::class, 'edit'])->name('task.edit');
     Route::put('/edit/task/{task}', [TaskController::class, 'update'])->name('task.update');
     Route::delete('/task/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
+
+    Route::resource('/categories', CategoryController::class);
+    // php artisan route:list
+    //   GET|HEAD        categories ...................... categories.index › CategoryController@index  
+    //   POST            categories ...................... categories.store › CategoryController@store  
+    //   GET|HEAD        categories/create ............. categories.create › CategoryController@create  
+    //   GET|HEAD        categories/{category} ............. categories.show › CategoryController@show  
+    //   PUT|PATCH       categories/{category} ......... categories.update › CategoryController@update  
+    //   DELETE          categories/{category} ....... categories.destroy › CategoryController@destroy  
+    //   GET|HEAD        categories/{category}/edit ........ categories.edit › CategoryController@edit
 });
 
 

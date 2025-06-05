@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Category;
+use App\Http\Resources\CategoryResource;
 
 class TaskController extends Controller
 {
@@ -31,7 +33,11 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('task.create');
+
+        $categories = CategoryResource::collection(Category::orderby('category')->get())->resolve();
+        
+        //return $categories;
+        return view('task.create', compact('categories'));
     }
 
     /**
