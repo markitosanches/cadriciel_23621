@@ -42,11 +42,17 @@ class CategoryController extends Controller
             'category_fr' => 'max:30',
         ]);
 
-    $category = [
-        'en' => $request->category_en,
-    ];
-    if($request->category_fr != null) { $category = $category + ['fr' => $request->category_fr];};
+    // $category = [
+    //     'en' => $request->category_en,
+    // ];
+    // if($request->category_fr != null) { $category = $category + ['fr' => $request->category_fr];};
     
+
+    $category = array_filter([
+        'en' => $request->category_en,
+        'fr' => $request->category_fr
+    ]);
+
     Category::create([
         'category' => $category
     ]);

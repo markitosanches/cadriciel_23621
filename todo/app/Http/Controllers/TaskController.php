@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
-use App\Http\Resources\CategoryResource;
+use Dompdf\Dompdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 
 class TaskController extends Controller
 {
@@ -33,8 +35,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-
-        $categories = CategoryResource::collection(Category::orderby('category')->get())->resolve();
+        $categories = Category::categories();
         
         //return $categories;
         return view('task.create', compact('categories'));
@@ -51,7 +52,10 @@ class TaskController extends Controller
             'description' => 'required|min:10',
             'completed' => 'nullable|boolean',
             'due_date' => 'nullable|date',
-        ]);
+            'category_id' => 'required|exists:categories,id'
+        ],
+        ['category_id' => 'The category is mandatory'],
+        ['category_id' => 'category']);
         // return redirect()->back()->withErrors([])->with('input')
    
         $task=Task::create([
@@ -60,6 +64,7 @@ class TaskController extends Controller
             'completed' => $request->input('completed', false),
             'due_date' => $request->due_date,
             'user_id' => Auth::user()->id,
+            'category_id' => $request->category_id
         ]);
 
      return redirect()->route('task.show', $task->id)->with('success', 'Task Created Successfully!');
@@ -119,6 +124,16 @@ class TaskController extends Controller
     public function completed($completed){
         $tasks = Task::where('completed', $completed)->get();
         return view('task.index', ['tasks' => $tasks]);
+    }
+
+        public function pdf(Task $task)
+    {
+        $qrCode = QrCode::size(200)->generate(route('task.show', $task->id));
+       $pdf = new Dompdf();
+       $pdf->setPaper('letter', 'portrait');
+       $pdf->loadHtml(view('task.show-pdf', ['task' => $task, 'qrCode' => $qrCode]));
+       $pdf->render();
+       return $pdf->stream('task-'.$task->id.'.pdf');
     }
 
     public function query(){

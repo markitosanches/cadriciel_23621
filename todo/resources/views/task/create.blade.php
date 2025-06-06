@@ -50,8 +50,9 @@
                         <div class="mb-3">
                             <label for="category_id" class="form-label">Category</label>
                             <select id="category_id" name="category_id" class="form-control" >
+                                <option value="">Choose a category</option>
                                 @foreach($categories as $category)
-                                <option value="{{$category['id']}}">{{$category['category']}}</option>
+                                <option value="{{$category['id']}}" @if ($category['id'] == old('category_id')) selected @endif>{{$category['category']}}</option>
                                 @endforeach
                             </select>
                             @if($errors->has('category_id'))

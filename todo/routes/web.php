@@ -26,6 +26,7 @@ Route::get('/lang/{locale}', [SetLocaleController::class, 'index'])->name('lang'
 
 Route::get('/tasks', [TaskController::class, 'index'])->name('task.index');
 Route::get('/task/{task}', [TaskController::class, 'show'])->name('task.show');
+Route::get('/task-pdf/{task}', [TaskController::class, 'pdf'])->name('task.pdf');
 
 Route::get('/create/task', [TaskController::class, 'create'])->name('task.create')->middleware('auth');
 
