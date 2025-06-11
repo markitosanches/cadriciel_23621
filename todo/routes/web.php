@@ -56,6 +56,11 @@ Route::get('/users', [UserController::class, 'index'])->name('user.index');
 Route::get('/registration', [UserController::class, 'create'])->name('user.create');
 Route::post('/registration', [UserController::class, 'store'])->name('user.store');
 
+Route::get('/password/forgot', [AuthController::class, 'forgot'])->name('auth.forgot');
+Route::post('/password/forgot', [AuthController::class, 'email'])->name('auth.email');
+Route::get('/password/reset/{user}/{token}', [AuthController::class, 'reset'])->name('auth.reset');
+Route::put('/password/reset/{user}/{token}', [AuthController::class, 'resetUpdate'])->name('auth.reset.update');
+
 Route::get('/login', [AuthController::class, 'create'])->name('login');
 Route::post('/login', [AuthController::class, 'store'])->name('login.store');
 Route::get('/logout', [AuthController::class, 'destroy'])->name('logout');

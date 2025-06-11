@@ -26,7 +26,10 @@ class Category extends Model
     }
 
     static public function  categories() {
-         return CategoryResource::collection(self::orderby('category')->get())->resolve();
+        $category = CategoryResource::collection(self::all())->resolve();
+        // Sort by the calculated 'type' value
+        $sorted = collect($category)->sortBy('category')->values();
+        return $sorted->all(); // Return as plain array
     }
 
 }
