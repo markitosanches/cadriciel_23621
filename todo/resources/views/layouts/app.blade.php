@@ -28,7 +28,9 @@
                                 aria-expanded="false">@lang('User')</a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('user.index')}}">@lang('Users')</a></li>
+                                @can('create-users')
                                 <li><a class="dropdown-item" href="{{route('user.create')}}">@lang('New User')</a></li>
+                                @endcan
                             </ul>
                         </li>
                         @endauth
@@ -75,6 +77,10 @@
     
     @auth
         <p>Hello <strong> {{ Auth::user()->name }}</strong></p>
+        @role('Admin')
+            Your are connected as Admin!
+        @endrole
+        
     @else
         <p>Please login to continue!</p>
     @endauth

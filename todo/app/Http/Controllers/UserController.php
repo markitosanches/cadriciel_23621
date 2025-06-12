@@ -19,10 +19,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::select('id', 'name', 'email')->orderby('name')->paginate(4);
-
-
-        return view('user.index', ['users' => $users]);
+        if(Auth::user()->hasRole('Admin')){
+            $users = User::select('id', 'name', 'email')->orderby('name')->paginate(4);
+            return view('user.index', ['users' => $users]);
+        }else{
+            return redirect(route('login'))->withErrors('Access denied!');
+        }
+        
     }
 
     /**

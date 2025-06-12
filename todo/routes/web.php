@@ -35,8 +35,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit/task/{task}', [TaskController::class, 'edit'])->name('task.edit');
     Route::put('/edit/task/{task}', [TaskController::class, 'update'])->name('task.update');
     Route::delete('/task/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
+    Route::middleware(['role:Admin'])->group(function () {
+        Route::resource('/categories', CategoryController::class);
+    });
+    
 
-    Route::resource('/categories', CategoryController::class);
+
     // php artisan route:list
     //   GET|HEAD        categories ...................... categories.index › CategoryController@index  
     //   POST            categories ...................... categories.store › CategoryController@store  
@@ -53,7 +57,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/query', [TaskController::class, 'query']);
 
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
-Route::get('/registration', [UserController::class, 'create'])->name('user.create');
+Route::get('/registration', [UserController::class, 'create'])->name('user.create')->middleware('can:create-users');
 Route::post('/registration', [UserController::class, 'store'])->name('user.store');
 
 Route::get('/password/forgot', [AuthController::class, 'forgot'])->name('auth.forgot');
